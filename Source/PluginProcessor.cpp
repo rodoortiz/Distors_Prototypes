@@ -31,7 +31,7 @@ Distors_PrototypesAudioProcessor::~Distors_PrototypesAudioProcessor()
 AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::parameterLayout() {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
     
-    params.push_back(std::make_unique<AudioParameterFloat>("KNOB1", "Knob1", NormalisableRange<float> (1.0f, 100.0f, 0.01), 10.0f));
+    params.push_back(std::make_unique<AudioParameterFloat>("KNOB1", "Knob1", NormalisableRange<float> (1.0f, 100.0f, 0.01), 1.0f));
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB2", "Knob2", NormalisableRange<float> (0.0f, 1.0f, 0.01), 0.5f));
     
     return {params.begin(), params.end()};
@@ -153,14 +153,18 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         for (int n = 0; n < buffer.getNumSamples(); ++n) {
             float sample = buffer.getWritePointer(channel)[n];
 
-            float sampleProcessed = distortions.arcTanDistortion(sample, apvts.getRawParameterValue("KNOB1")->load());
+//            float sampleProcessed = distortions.arcTanDistortion(sample, apvts.getRawParameterValue("KNOB1")->load());
             
 //            float sampleProcessed = distortions.softClipper(sample, apvts.getRawParameterValue("KNOB1")->load());
             
+            float sampleProcessed = distortions.sigmoid(sample, apvts.getRawParameterValue("KNOB1")->load());
+            
+//            float sampleProcessed = distortions.hyperbolicTangent(sample, apvts.getRawParameterValue("KNOB1")->load());
+
             dryWetValue = apvts.getRawParameterValue("KNOB2")->load();
             float output = ((1.0f - dryWetValue) * sample) + (dryWetValue * sampleProcessed);
 
-            buffer.getWritePointer(channel)[n] = output;
+            buffer.getWritePointer(channel)[n] = sampleProcessed;
         }
     }
 }

@@ -17,7 +17,8 @@ class Distortions {
 public:
     float arcTanDistortion(float input, float gain);
     float softClipper(float input, float gain);
-    
+    float sigmoid(float input, float gain);
+    float hyperbolicTangent(float input, float gain);
 
 private:
     
