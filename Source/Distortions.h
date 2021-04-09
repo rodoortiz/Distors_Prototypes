@@ -19,7 +19,6 @@ public:
     float softClipper(float input, float gain);
     float sigmoid(float input, float gain);
     float hyperbolicTangent(float input, float gain);
-
-private:
-    
+    float diodeClipping(float input, float gain);
+    float fuzzExponential(float input, float gain);
 };

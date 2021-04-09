@@ -60,6 +60,7 @@ public:
 private:
     
     Distortions distortions;
+    dsp::Convolution convolution;
     
     float dryWetValue;
     

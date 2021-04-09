@@ -14,6 +14,13 @@
       <FILE id="iKGIyH" name="Distortions.cpp" compile="1" resource="0" file="Source/Distortions.cpp"/>
       <FILE id="OJ6sGX" name="Distortions.h" compile="0" resource="0" file="Source/Distortions.h"/>
     </GROUP>
+    <GROUP id="{3F46406B-585F-A931-3BB3-4698302C4FC2}" name="IR">
+      <FILE id="oSqxTB" name="metalOne.wav" compile="0" resource="1" file="IR/metalOne.wav"/>
+      <FILE id="YnNsjv" name="Fredman Straight.wav" compile="0" resource="1"
+            file="IR/Fredman Straight.wav"/>
+      <FILE id="up1oY6" name="GuitarHack JJ CENTRE45 0.wav" compile="0" resource="1"
+            file="IR/GuitarHack JJ CENTRE45 0.wav"/>
+    </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
