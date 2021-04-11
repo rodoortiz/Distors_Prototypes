@@ -16,6 +16,8 @@ float Distortions::arcTanDistortion(float input, float gain)
     
     float out = (2.0f / M_PI) * atan(gain * input);
     
+    out = pow(out, 3);
+    
     out = out/log(gain);
     
     return out;
@@ -29,7 +31,7 @@ float Distortions::softClipper(float input, float gain)
     if (newInput >= 1.0f)
         out = 1.0f;
     else if ((newInput > -1) && (newInput < 1))
-        out = (3.0f/2.0f) * (newInput - (pow(newInput, 3.0f)/3.0f));
+        out = (3.0f / 2.0f) * (newInput - (pow(newInput, 3.0f) / 3.0f));
     else if (newInput <= -1)
         out = -1.0f;
     
@@ -97,7 +99,7 @@ float Distortions::fuzzExponential(float input, float gain)
 }
 
 float Distortions::pieceWiseOverdrive(float input, float gain) {
-    float newInput = input * (gain) ;
+    float newInput = input * (gain + 1) ;
     float out;
     
     if (abs(newInput) <= 1/3)
@@ -113,6 +115,8 @@ float Distortions::pieceWiseOverdrive(float input, float gain) {
         if (newInput < 0)
             out = -(3 - pow((2 - newInput * 3), 2)) / 3;
     }
+    
+    out = (out/log(gain)) * 0.5f;
     
     return out;
 }

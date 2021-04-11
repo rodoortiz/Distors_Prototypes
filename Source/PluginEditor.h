@@ -25,9 +25,9 @@ public:
     void resized() override;
 
 private:
-    std::unique_ptr<Slider> gain, dryWet;
-    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> knob1Attachment, knob2Attachment;
-    Label Label1, Label2;
+    std::unique_ptr<Slider> gain, dryWet, tone;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainAttachment, dryWetAttachment, toneAttachment;
+    Label gainLabel, dryWetLabel, toneLabel;
     
     std::unique_ptr<ComboBox> distortionSelector;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> comboboxAttach;
