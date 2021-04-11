@@ -34,7 +34,7 @@ AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB1", "Knob1", NormalisableRange<float> (1.0f, 100.0f, 0.01), 1.0f));
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB2", "Knob2", NormalisableRange<float> (0.0f, 1.0f, 0.01), 0.5f));
     
-    int numOfDistortions = 6;
+    int numOfDistortions = 7;
     params.push_back(std::make_unique<AudioParameterInt>("DISTOR_SELECT", "Distortion Selector", 1, numOfDistortions, 1));
     
     params.push_back(std::make_unique<AudioParameterBool>("CONVOLUTION", "Convolution", false));
@@ -186,22 +186,13 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
                     sampleProcessed = distortions.fuzzExponential(sample, apvts.getRawParameterValue("KNOB1")->load());
                     break;
                     
+                case 7:
+                    sampleProcessed = distortions.pieceWiseOverdrive(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    break;
+                    
                 default:
                     break;
             }
-        
-
-//            float sampleProcessed = distortions.arcTanDistortion(sample, apvts.getRawParameterValue("KNOB1")->load());
-            
-//            float sampleProcessed = distortions.softClipper(sample, apvts.getRawParameterValue("KNOB1")->load());
-            
-//            float sampleProcessed = distortions.sigmoid(sample, apvts.getRawParameterValue("KNOB1")->load());
-            
-//            float sampleProcessed = distortions.hyperbolicTangent(sample, apvts.getRawParameterValue("KNOB1")->load());
-            
-//            float sampleProcessed = distortions.diodeClipping(sample, apvts.getRawParameterValue("KNOB1")->load());
-
-//            float sampleProcessed = distortions.fuzzExponential(sample, apvts.getRawParameterValue("KNOB1")->load());
 
             dryWetValue = apvts.getRawParameterValue("KNOB2")->load();
             float output = ((1.0f - dryWetValue) * sample) + (dryWetValue * sampleProcessed);
@@ -213,10 +204,10 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
     bool convolutionState = static_cast<bool>(apvts.getRawParameterValue("CONVOLUTION")->load());
     
     if (convolutionState) {
-        buffer.applyGain(0, buffer.getNumSamples(), 2.0f);
         auto audioBlock = dsp::AudioBlock<float> (buffer);
         auto context = dsp::ProcessContextReplacing<float> (audioBlock);
         convolution.process(context);
+        buffer.applyGain(0, buffer.getNumSamples(), 5.0f);
     }
 
 }

@@ -19,7 +19,6 @@ float Distortions::arcTanDistortion(float input, float gain)
     out = out/log(gain);
     
     return out;
-
 }
 
 float Distortions::softClipper(float input, float gain)
@@ -82,7 +81,8 @@ float Distortions::fuzzExponential(float input, float gain)
 //        float out = -1 * ((1 - exp(abs(newInput))/(exp(1) - 1)));
 //        return out;
 //    }
-
+    
+    //Soft clipping
     if (newInput < 0) {
         out = -1 *  (1 - exp(-abs(newInput)));
     } else {
@@ -96,7 +96,26 @@ float Distortions::fuzzExponential(float input, float gain)
 
 }
 
-
+float Distortions::pieceWiseOverdrive(float input, float gain) {
+    float newInput = input * (gain) ;
+    float out;
+    
+    if (abs(newInput) <= 1/3)
+        out = 2 * newInput;
+    else if (abs(newInput) > 2/3) {
+        if (newInput > 0)
+            out = newInput;
+        if (newInput < 0)
+            out = -newInput;
+    } else {
+        if (newInput > 0)
+            out = (3 - pow((2 - newInput * 3), 2)) / 3;
+        if (newInput < 0)
+            out = -(3 - pow((2 - newInput * 3), 2)) / 3;
+    }
+    
+    return out;
+}
 
 
 

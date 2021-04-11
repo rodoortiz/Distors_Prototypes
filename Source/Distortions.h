@@ -21,4 +21,5 @@ public:
     float hyperbolicTangent(float input, float gain);
     float diodeClipping(float input, float gain);
     float fuzzExponential(float input, float gain);
+    float pieceWiseOverdrive(float input, float gain);
 };

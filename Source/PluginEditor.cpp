@@ -47,6 +47,8 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     distortionSelector->addItem("hyperbolicTangent", 4);
     distortionSelector->addItem("diodeClipping", 5);
     distortionSelector->addItem("fuzzExponential", 6);
+    distortionSelector->addItem("pieceWiseOverdirve", 7);
+
     addAndMakeVisible(distortionSelector.get());
     
     comboboxAttach = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (audioProcessor.apvts, "DISTOR_SELECT", *distortionSelector);
