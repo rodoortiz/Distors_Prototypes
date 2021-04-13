@@ -22,4 +22,5 @@ public:
     float diodeClipping(float input, float gain);
     float fuzzExponential(float input, float gain);
     float pieceWiseOverdrive(float input, float gain);
+    float tube(float input, float gain);
 };

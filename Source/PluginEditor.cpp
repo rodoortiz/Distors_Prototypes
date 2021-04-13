@@ -60,6 +60,7 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     distortionSelector->addItem("diodeClipping", 5);
     distortionSelector->addItem("fuzzExponential", 6);
     distortionSelector->addItem("pieceWiseOverdirve", 7);
+    distortionSelector->addItem("tube", 8);
 
     addAndMakeVisible(distortionSelector.get());
     

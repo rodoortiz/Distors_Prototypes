@@ -61,6 +61,7 @@ private:
     
     Distortions distortions;
     dsp::Convolution convolution;
+    dsp::StateVariableTPTFilter<float> toneFilter;
     
     float dryWetValue;
     

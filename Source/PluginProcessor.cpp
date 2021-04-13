@@ -33,9 +33,9 @@ AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::
     
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB1", "Knob1", NormalisableRange<float> (1.0f, 100.0f, 0.01), 1.0f));
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB2", "Knob2", NormalisableRange<float> (0.0f, 1.0f, 0.01), 0.5f));
-    params.push_back(std::make_unique<AudioParameterFloat>("KNOB3", "Knob3", NormalisableRange<float> (0.0f, 1.0f, 0.01), 0.5f));
+    params.push_back(std::make_unique<AudioParameterFloat>("KNOB3", "Knob3", NormalisableRange<float> (20.0f, 20000.0f, 1.0), 20000.0f));
     
-    int numOfDistortions = 7;
+    int numOfDistortions = 8;
     params.push_back(std::make_unique<AudioParameterInt>("DISTOR_SELECT", "Distortion Selector", 1, numOfDistortions, 1));
     
     params.push_back(std::make_unique<AudioParameterBool>("CONVOLUTION", "Convolution", false));
@@ -115,7 +115,10 @@ void Distors_PrototypesAudioProcessor::prepareToPlay (double sampleRate, int sam
     spec.numChannels = getTotalNumOutputChannels();
     
     convolution.prepare(spec);
-    convolution.loadImpulseResponse(BinaryData::GuitarHack_JJ_CENTRE45_0_wav, BinaryData::GuitarHack_JJ_CENTRE45_0_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    convolution.loadImpulseResponse(BinaryData::Fredman_Straight_wav, BinaryData::Fredman_Straight_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    
+    toneFilter.prepare(spec);
+    toneFilter.setType(dsp::StateVariableTPTFilterType::lowpass);
 }
 
 void Distors_PrototypesAudioProcessor::releaseResources()
@@ -191,6 +194,10 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
                     sampleProcessed = distortions.pieceWiseOverdrive(sample, apvts.getRawParameterValue("KNOB1")->load());
                     break;
                     
+                case 8:
+                    sampleProcessed = distortions.tube(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    break;
+                    
                 default:
                     break;
             }
@@ -210,6 +217,12 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         convolution.process(context);
         buffer.applyGain(0, buffer.getNumSamples(), 5.0f);
     }
+    
+    toneFilter.setCutoffFrequency(apvts.getRawParameterValue("KNOB3")->load());
+    
+    auto audioBlock = dsp::AudioBlock<float> (buffer);
+    auto context = dsp::ProcessContextReplacing<float> (audioBlock);
+    toneFilter.process(context);
 
 }
 
@@ -227,15 +240,16 @@ juce::AudioProcessorEditor* Distors_PrototypesAudioProcessor::createEditor()
 //==============================================================================
 void Distors_PrototypesAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    juce::MemoryOutputStream stream(destData, false);
+    apvts.state.writeToStream(stream);
 }
 
 void Distors_PrototypesAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    juce::ValueTree tree = juce::ValueTree::readFromData (data, size_t (sizeInBytes));
+    if (tree.isValid()) {
+        apvts.state = tree;
+    }
 }
 
 //==============================================================================
