@@ -49,7 +49,7 @@
 namespace ProjectInfo
 {
     const char* const  projectName    = "Distors_Prototypes";
-    const char* const  companyName    = "";
+    const char* const  companyName    = "Rod Plugins";
     const char* const  versionString  = "1.0.0";
     const int          versionNumber  = 0x10000;
 }
