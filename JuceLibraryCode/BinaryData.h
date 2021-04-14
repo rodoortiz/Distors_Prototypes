@@ -17,8 +17,11 @@ namespace BinaryData
     extern const char*   GuitarHack_JJ_CENTRE45_0_wav;
     const int            GuitarHack_JJ_CENTRE45_0_wavSize = 82690;
 
+    extern const char*   knob_png;
+    const int            knob_pngSize = 391667;
+
     // Number of elements in the namedResourceList and originalFileNames arrays.
-    const int namedResourceListSize = 3;
+    const int namedResourceListSize = 4;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

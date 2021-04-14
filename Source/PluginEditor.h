@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "KnobLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -36,6 +37,8 @@ private:
     std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> convButtonAttach;
     
     Distors_PrototypesAudioProcessor& audioProcessor;
+    
+    KnobLookAndFeel knobLookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Distors_PrototypesAudioProcessorEditor)
 };

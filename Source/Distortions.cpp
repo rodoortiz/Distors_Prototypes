@@ -102,7 +102,7 @@ float Distortions::fuzzExponential(float input, float gain)
 }
 
 float Distortions::pieceWiseOverdrive(float input, float gain) {
-    float newInput = input * (gain + 1) ;
+    float newInput = input * (gain) ;
     float out;
     
     if (abs(newInput) <= 1/3)
@@ -119,7 +119,7 @@ float Distortions::pieceWiseOverdrive(float input, float gain) {
             out = -(3 - pow((2 - newInput * 3), 2)) / 3;
     }
     
-    out = (out/log(gain)) * 0.5f;
+    out = (out/log(gain + 1)) * 0.5f;
     
     return out;
 }

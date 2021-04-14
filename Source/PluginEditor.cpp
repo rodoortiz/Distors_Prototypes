@@ -13,10 +13,11 @@
 Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (Distors_PrototypesAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    //KNOB 1
+    //KNOB 1 Gain
     gain = std::make_unique<Slider>();
-    gain->setSliderStyle(Slider::RotaryVerticalDrag);
+    gain->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     gain->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 30);
+    gain->setLookAndFeel(&knobLookAndFeel);
     addAndMakeVisible(gain.get());
     
     gainAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "KNOB1", *gain);
@@ -26,9 +27,9 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     gainLabel.setJustificationType(Justification::centred);
     addAndMakeVisible(gainLabel);
     
-    //KNOB 2
+    //KNOB 2 DryWet
     dryWet = std::make_unique<Slider>();
-    dryWet->setSliderStyle(Slider::RotaryVerticalDrag);
+    dryWet->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     dryWet->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 30);
     addAndMakeVisible(dryWet.get());
     
@@ -38,10 +39,11 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     dryWetLabel.attachToComponent(dryWet.get(), false);
     dryWetLabel.setJustificationType(Justification::centred);
     
-    //KNOB 3
+    //KNOB 3 Tone
     tone = std::make_unique<Slider>();
-    tone->setSliderStyle(Slider::RotaryVerticalDrag);
+    tone->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     tone->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 30);
+    tone->setLookAndFeel(&knobLookAndFeel);
     addAndMakeVisible(tone.get());
     
     toneAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "KNOB3", *tone);

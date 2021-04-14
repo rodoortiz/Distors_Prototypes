@@ -13,6 +13,8 @@
       <FILE id="nwKreb" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="iKGIyH" name="Distortions.cpp" compile="1" resource="0" file="Source/Distortions.cpp"/>
       <FILE id="OJ6sGX" name="Distortions.h" compile="0" resource="0" file="Source/Distortions.h"/>
+      <FILE id="rbFi3W" name="KnobLookAndFeel.h" compile="0" resource="0"
+            file="Source/KnobLookAndFeel.h"/>
     </GROUP>
     <GROUP id="{3F46406B-585F-A931-3BB3-4698302C4FC2}" name="IR">
       <FILE id="oSqxTB" name="metalOne.wav" compile="0" resource="1" file="IR/metalOne.wav"/>
@@ -20,6 +22,9 @@
             file="IR/Fredman Straight.wav"/>
       <FILE id="up1oY6" name="GuitarHack JJ CENTRE45 0.wav" compile="0" resource="1"
             file="IR/GuitarHack JJ CENTRE45 0.wav"/>
+    </GROUP>
+    <GROUP id="{D967A591-D557-686F-A7B1-4A4651EE7060}" name="Resources">
+      <FILE id="WC400v" name="knob.png" compile="0" resource="1" file="Resources/knob.png"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
