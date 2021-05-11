@@ -76,14 +76,6 @@ float Distortions::fuzzExponential(float input, float gain)
 {
     float newInput = input * gain;
     float out;
-
-//    if (newInput < 0) {
-//        float out = 1 * ((1 - exp(abs(newInput))/(exp(1) - 1)));
-//        return out;
-//    } else {
-//        float out = -1 * ((1 - exp(abs(newInput))/(exp(1) - 1)));
-//        return out;
-//    }
     
     //Soft clipping
     if (newInput < 0) {
@@ -144,9 +136,40 @@ float Distortions::tube(float input, float gain)
         }
     }
     
-    out = out * 0.8;
+    out = out * 0.8f;
     
     return out;
+}
+
+float Distortions::arraya(float input, float gain)
+{
+    auto newInput = input * 1.0f;
+    
+    //Arraya
+    auto out = ((3.0f * newInput) / 2.0f) * (1.0f - (pow(newInput, 2.0f) / 3.0f));
+    
+//    Fuzz Exponential
+    if (out < 0) {
+        out = 1 * ((1 - exp(abs(out))/(exp(1) - 1)));
+    } else {
+        out = -1 * ((1 - exp(abs(out))/(exp(1) - 1)));
+    }
+    
+    //Exponential 2
+//    out = (exp(1) - exp(1 - out)) / (exp(1) - 1);
+    
+//    out = 0.5 * (out + abs(out));
+//    out = abs(out);
+    
+    if (gain >= 10) {
+        out = out * (gain / 100.0f);
+    } else
+        out = out * (0.1f);
+    
+    //Arraya
+    out = ((3.0f * out) / 2.0f) * (1.0f - (pow(out, 2.0f) / 3.0f));
+    
+    return out * 0.8f;
 }
 
 

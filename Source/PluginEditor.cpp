@@ -56,13 +56,14 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     distortionSelector = std::make_unique<ComboBox>();
     distortionSelector->setTextWhenNothingSelected("Select Distortion");
     distortionSelector->addItem("arcTanDistortion", 1);
-    distortionSelector->addItem(" softClipper", 2);
+    distortionSelector->addItem("softClipper", 2);
     distortionSelector->addItem("sigmoid", 3);
     distortionSelector->addItem("hyperbolicTangent", 4);
     distortionSelector->addItem("diodeClipping", 5);
     distortionSelector->addItem("fuzzExponential", 6);
     distortionSelector->addItem("pieceWiseOverdirve", 7);
     distortionSelector->addItem("tube", 8);
+    distortionSelector->addItem("arraya", 9);
 
     addAndMakeVisible(distortionSelector.get());
     
@@ -80,6 +81,8 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
 
 Distors_PrototypesAudioProcessorEditor::~Distors_PrototypesAudioProcessorEditor()
 {
+    gain->setLookAndFeel(nullptr);
+    tone->setLookAndFeel(nullptr);
 }
 
 //==============================================================================

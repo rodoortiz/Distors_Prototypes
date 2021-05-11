@@ -12,15 +12,22 @@
 
 #include <JuceHeader.h>
 #include <cmath>
-
-class Distortions {
-public:
+struct Distortions {
     float arcTanDistortion(float input, float gain);
+    
     float softClipper(float input, float gain);
+    
     float sigmoid(float input, float gain);
+    
     float hyperbolicTangent(float input, float gain);
+    
     float diodeClipping(float input, float gain);
+    
     float fuzzExponential(float input, float gain);
+    
     float pieceWiseOverdrive(float input, float gain);
+    
     float tube(float input, float gain);
+    
+    float arraya(float input, float gain);
 };

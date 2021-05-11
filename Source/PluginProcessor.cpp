@@ -35,7 +35,7 @@ AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB2", "Knob2", NormalisableRange<float> (0.0f, 1.0f, 0.01), 0.5f));
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB3", "Knob3", NormalisableRange<float> (20.0f, 20000.0f, 1.0), 20000.0f));
     
-    int numOfDistortions = 8;
+    int numOfDistortions = 9;
     params.push_back(std::make_unique<AudioParameterInt>("DISTOR_SELECT", "Distortion Selector", 1, numOfDistortions, 1));
     
     params.push_back(std::make_unique<AudioParameterBool>("CONVOLUTION", "Convolution", false));
@@ -115,7 +115,7 @@ void Distors_PrototypesAudioProcessor::prepareToPlay (double sampleRate, int sam
     spec.numChannels = getTotalNumOutputChannels();
     
     convolution.prepare(spec);
-    convolution.loadImpulseResponse(BinaryData::Fredman_Straight_wav, BinaryData::Fredman_Straight_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    convolution.loadImpulseResponse(BinaryData::GuitarHack_JJ_CENTRE45_0_wav, BinaryData::GuitarHack_JJ_CENTRE45_0_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
     
     toneFilter.prepare(spec);
     toneFilter.setType(dsp::StateVariableTPTFilterType::lowpass);
@@ -169,41 +169,44 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         for (int n = 0; n < buffer.getNumSamples(); ++n) {
             float sample = buffer.getWritePointer(channel)[n];
             float sampleProcessed;
+            auto gainValue = apvts.getRawParameterValue("KNOB1")->load();
             
             switch (distortionSelected) {
                 case 1:
-                    sampleProcessed = distortions.arcTanDistortion(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.arcTanDistortion(sample, gainValue);
                     break;
                 case 2:
-                    sampleProcessed = distortions.softClipper(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.softClipper(sample, gainValue);
                     break;
                 case 3:
-                    sampleProcessed = distortions.sigmoid(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.sigmoid(sample, gainValue);
                     break;
                 case 4:
-                    sampleProcessed = distortions.hyperbolicTangent(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.hyperbolicTangent(sample, gainValue);
                     break;
                 case 5:
-                    sampleProcessed = distortions.diodeClipping(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.diodeClipping(sample, gainValue);
                     break;
                 case 6:
-                    sampleProcessed = distortions.fuzzExponential(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.fuzzExponential(sample, gainValue);
                     break;
-                    
                 case 7:
-                    sampleProcessed = distortions.pieceWiseOverdrive(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.pieceWiseOverdrive(sample, gainValue);
                     break;
-                    
                 case 8:
-                    sampleProcessed = distortions.tube(sample, apvts.getRawParameterValue("KNOB1")->load());
+                    sampleProcessed = distortions.tube(sample, gainValue);
+                    break;
+                case 9:
+                    sampleProcessed = distortions.arraya(sample, gainValue);
                     break;
                     
                 default:
+                    sampleProcessed = sample;
                     break;
             }
 
-            dryWetValue = apvts.getRawParameterValue("KNOB2")->load();
-            float output = ((1.0f - dryWetValue) * sample) + (dryWetValue * sampleProcessed);
+//            dryWetValue = apvts.getRawParameterValue("KNOB2")->load();
+//            float output = ((1.0f - dryWetValue) * sample) + (dryWetValue * sampleProcessed);
 
             buffer.getWritePointer(channel)[n] = sampleProcessed;
         }
