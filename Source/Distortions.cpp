@@ -14,7 +14,7 @@ float Distortions::arcTanDistortion(float input, float gain)
 {
     gain = gain + 1.0f;
     
-    float out = (2.0f / M_PI) * atan(gain * input);
+    float out = (2.0f / juce::MathConstants<float>::pi) * atan(gain * input);
     
     out = out/log(gain);
     
@@ -52,7 +52,7 @@ float Distortions::sigmoid(float input, float gain)
 float Distortions::hyperbolicTangent(float input, float gain)
 {
     gain = gain + 1.0f;
-    float out =  (tanh(gain*input)) / (tanh(gain));
+    float out = (tanh(gain * input)) / (tanh(gain));
     
 //    out = out/log(gain);
     out = out * 0.4;
@@ -64,7 +64,7 @@ float Distortions::diodeClipping(float input, float gain)
 //    gain = gain + 1.0f;
     
     float diodeClippingAlgorithm = exp((0.1 * input) / (0.0253 * 1.68)) - 1;
-    float out = 2/M_PI * atan(diodeClippingAlgorithm * (gain * 16));
+    float out = 2/juce::MathConstants<float>::pi * atan(diodeClippingAlgorithm * (gain * 16));
     
     out = out * 0.3;
 //    out = out/log(gain);
@@ -78,16 +78,16 @@ float Distortions::fuzzExponential(float input, float gain)
     float out;
     
     //Soft clipping
-    if (newInput < 0) {
-        out = -1 *  (1 - exp(-abs(newInput)));
+    if (newInput < 0.0f) {
+        out = -1.0f *  (1.0f - exp(-abs(newInput)));
     } else {
-        out = 1 *  (1 - exp(-abs(newInput)));
+        out = 1.0f * (1.0f - exp(-abs(newInput)));
     }
  
     //Half Wave Rectifier
-    out = 0.5 * (out + abs(out));
+    out = 0.5f * (out + abs(out));
     
-    out = out * 0.8;
+    out = out * 0.8f;
     
     return out;
 
@@ -149,10 +149,10 @@ float Distortions::arraya(float input, float gain)
     auto out = ((3.0f * newInput) / 2.0f) * (1.0f - (pow(newInput, 2.0f) / 3.0f));
     
 //    Fuzz Exponential
-    if (out < 0) {
-        out = 1 * ((1 - exp(abs(out))/(exp(1) - 1)));
+    if (out < 0.0f) {
+        out = 1.0f * ((1.0f - exp(abs(out))/(exp(1.0f) - 1.0f)));
     } else {
-        out = -1 * ((1 - exp(abs(out))/(exp(1) - 1)));
+        out = -1.0f * ((1.0f - exp(abs(out))/(exp(1.0f) - 1.0f)));
     }
     
     //Exponential 2
@@ -161,15 +161,16 @@ float Distortions::arraya(float input, float gain)
 //    out = 0.5 * (out + abs(out));
 //    out = abs(out);
     
-    if (gain >= 10) {
+    if (gain >= 10.0f) {
         out = out * (gain / 100.0f);
     } else
         out = out * (0.1f);
     
     //Arraya
     out = ((3.0f * out) / 2.0f) * (1.0f - (pow(out, 2.0f) / 3.0f));
+    out *= 0.8f;
     
-    return out * 0.8f;
+    return out;
 }
 
 

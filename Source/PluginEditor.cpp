@@ -52,7 +52,7 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     toneLabel.attachToComponent(tone.get(), false);
     toneLabel.setJustificationType(Justification::centred);
     
-    //COMBOBOX
+    //COMBOBOX DISTORS
     distortionSelector = std::make_unique<ComboBox>();
     distortionSelector->setTextWhenNothingSelected("Select Distortion");
     distortionSelector->addItem("arcTanDistortion", 1);
@@ -67,14 +67,26 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
 
     addAndMakeVisible(distortionSelector.get());
     
-    comboboxAttach = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (audioProcessor.apvts, "DISTOR_SELECT", *distortionSelector);
+    comboBoxAttach = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (audioProcessor.apvts, "DISTOR_SELECT", *distortionSelector);
     
-    //BUTTON
+    //BUTTON CONVOLUTION
     convolutionButton = std::make_unique<TextButton>("Convolution");
     convolutionButton->setClickingTogglesState(true);
     addAndMakeVisible(convolutionButton.get());
     
     convButtonAttach = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment> (audioProcessor.apvts, "CONVOLUTION", *convolutionButton);
+    
+    //COMBOBOX CONVOLUTION
+    
+    convolutionSelector = std::make_unique<ComboBox>();
+    convolutionSelector->setTextWhenNothingSelected("Select Distortion");
+    convolutionSelector->addItem("MetalOne", 1);
+    convolutionSelector->addItem("Fredman", 2);
+    convolutionSelector->addItem("GuitarHack", 3);
+
+    addAndMakeVisible(convolutionSelector.get());
+    
+    convComboBoxAttach = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (audioProcessor.apvts, "CONV_SELECT", *convolutionSelector);
     
     setSize (400, 300);
 }
@@ -95,8 +107,9 @@ void Distors_PrototypesAudioProcessorEditor::paint (juce::Graphics& g)
 
 void Distors_PrototypesAudioProcessorEditor::resized()
 {
-    distortionSelector->setBoundsRelative(0.1f, 0.1f, 0.5f, 0.1f);
-    convolutionButton->setBoundsRelative(0.7f, 0.1f, 0.2f, 0.1f);
+    distortionSelector->setBoundsRelative(0.05f, 0.1f, 0.4f, 0.1f);
+    convolutionSelector->setBoundsRelative(0.5f, 0.1f, 0.2f, 0.1f);
+    convolutionButton->setBoundsRelative(0.75f, 0.1f, 0.2f, 0.1f);
     gain->setBoundsRelative(0.1f, 0.3f, 0.4f, 0.4f);
     dryWet->setBoundsRelative(0.5f, 0.3f, 0.4f, 0.4f);
     tone->setBoundsRelative(0.3f, 0.6, 0.4f, 0.4f);

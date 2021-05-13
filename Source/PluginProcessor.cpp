@@ -37,6 +37,8 @@ AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::
     
     int numOfDistortions = 9;
     params.push_back(std::make_unique<AudioParameterInt>("DISTOR_SELECT", "Distortion Selector", 1, numOfDistortions, 1));
+    int numOfConvolutions = 3;
+    params.push_back(std::make_unique<AudioParameterInt>("CONV_SELECT", "Convolution Selector", 1, numOfConvolutions, 1));
     
     params.push_back(std::make_unique<AudioParameterBool>("CONVOLUTION", "Convolution", false));
     
@@ -114,8 +116,14 @@ void Distors_PrototypesAudioProcessor::prepareToPlay (double sampleRate, int sam
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
     
-    convolution.prepare(spec);
-    convolution.loadImpulseResponse(BinaryData::GuitarHack_JJ_CENTRE45_0_wav, BinaryData::GuitarHack_JJ_CENTRE45_0_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    convolution_1.prepare(spec);
+    convolution_1.loadImpulseResponse(BinaryData::metalOne_wav, BinaryData::metalOne_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    
+    convolution_2.prepare(spec);
+    convolution_2.loadImpulseResponse(BinaryData::Fredman_Straight_wav, BinaryData::Fredman_Straight_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    
+    convolution_3.prepare(spec);
+    convolution_3.loadImpulseResponse(BinaryData::GuitarHack_JJ_CENTRE45_0_wav, BinaryData::GuitarHack_JJ_CENTRE45_0_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
     
     toneFilter.prepare(spec);
     toneFilter.setType(dsp::StateVariableTPTFilterType::lowpass);
@@ -212,12 +220,30 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         }
     }
     
-    bool convolutionState = static_cast<bool>(apvts.getRawParameterValue("CONVOLUTION")->load());
+    auto convolutionState = static_cast<bool>(apvts.getRawParameterValue("CONVOLUTION")->load());
     
     if (convolutionState) {
+        
         auto audioBlock = dsp::AudioBlock<float> (buffer);
         auto context = dsp::ProcessContextReplacing<float> (audioBlock);
-        convolution.process(context);
+        
+        auto convolutionSelected = static_cast<int>(apvts.getRawParameterValue("CONV_SELECT")->load());
+        
+        switch (convolutionSelected) {
+            case 1:
+                convolution_1.process(context);
+                break;
+            case 2:
+                convolution_2.process(context);
+                break;
+            case 3:
+                convolution_3.process(context);
+                break;
+                
+            default:
+                break;
+        }
+        
         buffer.applyGain(0, buffer.getNumSamples(), 5.0f);
     }
     

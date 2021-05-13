@@ -31,10 +31,13 @@ private:
     Label gainLabel, dryWetLabel, toneLabel;
     
     std::unique_ptr<ComboBox> distortionSelector;
-    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> comboboxAttach;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> comboBoxAttach;
     
     std::unique_ptr<TextButton> convolutionButton;
     std::unique_ptr<AudioProcessorValueTreeState::ButtonAttachment> convButtonAttach;
+    
+    std::unique_ptr<ComboBox> convolutionSelector;
+    std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> convComboBoxAttach;
     
     Distors_PrototypesAudioProcessor& audioProcessor;
     

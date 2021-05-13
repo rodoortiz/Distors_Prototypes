@@ -11,6 +11,8 @@
 #include <JuceHeader.h>
 #include "Distortions.h"
 
+
+
 //==============================================================================
 /**
 */
@@ -60,7 +62,9 @@ public:
 private:
     
     Distortions distortions;
-    dsp::Convolution convolution;
+    dsp::Convolution convolution_1;
+    dsp::Convolution convolution_2;
+    dsp::Convolution convolution_3;
     dsp::StateVariableTPTFilter<float> toneFilter;
     
     float dryWetValue;
