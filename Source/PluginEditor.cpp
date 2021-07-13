@@ -64,6 +64,7 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     distortionSelector->addItem("pieceWiseOverdirve", 7);
     distortionSelector->addItem("tube", 8);
     distortionSelector->addItem("arraya", 9);
+    distortionSelector->addItem("gallo", 10);
 
     addAndMakeVisible(distortionSelector.get());
     

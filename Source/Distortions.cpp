@@ -93,7 +93,8 @@ float Distortions::fuzzExponential(float input, float gain)
 
 }
 
-float Distortions::pieceWiseOverdrive(float input, float gain) {
+float Distortions::pieceWiseOverdrive(float input, float gain)
+{
     float newInput = input * (gain) ;
     float out;
     
@@ -168,6 +169,35 @@ float Distortions::arraya(float input, float gain)
     
     //Arraya
     out = ((3.0f * out) / 2.0f) * (1.0f - (pow(out, 2.0f) / 3.0f));
+    out *= 0.8f;
+    
+    return out;
+}
+
+float Distortions::gallo(float input, float gain)
+{
+    float a = 0.3f;
+    float b = 0.7f;
+    float k1 = pow(a, 2);
+    float k2 = 1 + 2 * a;
+    float k3 = pow(b, 2);
+    float k4 = 1 - 2 * b;
+    float out;
+    
+    auto newInput = input * gain;
+    
+    if (newInput < a) {
+        out = (k1 + newInput) / (k2 - newInput);
+    }
+    
+    if (newInput >= a && newInput <= b) {
+        out = newInput;
+    }
+    
+    if (newInput > b) {
+        out = (newInput - k3) / (newInput + k4);
+    }
+    
     out *= 0.8f;
     
     return out;

@@ -12,7 +12,8 @@
 
 #include <JuceHeader.h>
 #include <cmath>
-struct Distortions {
+struct Distortions
+{
     float arcTanDistortion(float input, float gain);
     
     float softClipper(float input, float gain);
@@ -30,4 +31,6 @@ struct Distortions {
     float tube(float input, float gain);
     
     float arraya(float input, float gain);
+    
+    float gallo(float input, float gain);
 };
