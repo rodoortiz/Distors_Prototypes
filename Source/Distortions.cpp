@@ -176,31 +176,27 @@ float Distortions::arraya(float input, float gain)
 
 float Distortions::gallo(float input, float gain)
 {
-    float a = 0.3f;
+    float a = -0.01f;
     float b = 0.7f;
-    float k1 = pow(a, 2);
-    float k2 = 1 + 2 * a;
-    float k3 = pow(b, 2);
-    float k4 = 1 - 2 * b;
-    float out;
+    float k1 = pow(a, 2.0f);
+    float k2 = 1 + (2 * a);
+    float k3 = pow(b, 2.0f);
+    float k4 = 1 - (2 * b);
+    float out_1 = 0.0f;
     
     auto newInput = input * gain;
     
     if (newInput < a) {
-        out = (k1 + newInput) / (k2 - newInput);
+        out_1 = (k1 + newInput) / (k2 - newInput);
     }
-    
     if (newInput >= a && newInput <= b) {
-        out = newInput;
+        out_1 = newInput;
     }
-    
     if (newInput > b) {
-        out = (newInput - k3) / (newInput + k4);
+        out_1 = (newInput - k3) / (newInput + k4);
     }
     
-    out *= 0.8f;
-    
-    return out;
+    return out_1;
 }
 
 
