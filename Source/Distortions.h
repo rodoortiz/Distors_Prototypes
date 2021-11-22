@@ -33,4 +33,6 @@ struct Distortions
     float arraya(float input, float gain);
     
     float gallo(float input, float gain);
+    
+    float doubleSoftClipper(float input, float gain);
 };

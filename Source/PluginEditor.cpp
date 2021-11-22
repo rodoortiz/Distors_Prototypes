@@ -65,6 +65,7 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     distortionSelector->addItem("tube", 8);
     distortionSelector->addItem("arraya", 9);
     distortionSelector->addItem("gallo", 10);
+    distortionSelector->addItem("doubleSoftClipper", 11);
 
     addAndMakeVisible(distortionSelector.get());
     

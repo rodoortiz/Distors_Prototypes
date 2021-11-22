@@ -35,7 +35,7 @@ AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB2", "Knob2", NormalisableRange<float> (0.0f, 1.0f, 0.01), 0.5f));
     params.push_back(std::make_unique<AudioParameterFloat>("KNOB3", "Knob3", NormalisableRange<float> (20.0f, 20000.0f, 1.0), 20000.0f));
     
-    int numOfDistortions = 10;
+    int numOfDistortions = 11;
     params.push_back(std::make_unique<AudioParameterInt>("DISTOR_SELECT", "Distortion Selector", 1, numOfDistortions, 1));
     int numOfConvolutions = 3;
     params.push_back(std::make_unique<AudioParameterInt>("CONV_SELECT", "Convolution Selector", 1, numOfConvolutions, 1));
@@ -209,6 +209,9 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
                     break;
                 case 10:
                     sampleProcessed = distortions.gallo(sample, gainValue);
+                    break;
+                case 11:
+                    sampleProcessed = distortions.doubleSoftClipper(sample, gainValue);
                     break;
                     
                 default:

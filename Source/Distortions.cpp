@@ -199,6 +199,53 @@ float Distortions::gallo(float input, float gain)
     return out_1;
 }
 
+float Distortions::doubleSoftClipper(float input, float gain)
+{
+    auto slope = 2.0f;
+    auto upperLim = 0.8f;
+    auto lowerLim = -1.0f;
+    auto upperSkew = 1.0f;
+    auto lowerSkew = 1.0f;
+    auto xOffFactor = 0.0f;
+    auto out = 0.0f;
+    
+    auto xOff = (1.0f / slope) * pow(slope, xOffFactor);
+    
+    input *= (gain / 10.0f);
+    
+    if (input > 0.0f)
+    {
+        input = (input - xOff) * upperSkew;
+        
+        if (input >= 1.0f / slope)
+        {
+            out = upperLim;
+        } else if (input <= -1.0f / slope)
+        {
+            out = 0.0f;
+        } else
+        {
+            out = (3.0f / 2.0f) * upperLim * (slope * input - pow(slope * input, 3.0f) / 3.0f) / 2.0f + (upperLim / 2.0f);
+        }
+    }
+    else
+    {
+        input = (input + xOff) * lowerSkew;
+        
+        if (input >= 1.0f / slope)
+        {
+            out = 0.0f;
+        } else if (input <= -1.0f / slope)
+        {
+            out = lowerLim;
+        } else
+        {
+            out = (3.0f / 2.0f) * -lowerLim * (slope * input - pow(slope * input, 3.0f) / 3.0f) / 2.0f + (lowerLim / 2.0f);
+        }
+    }
+    
+    return out;
+}
 
 
 
