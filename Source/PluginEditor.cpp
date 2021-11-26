@@ -66,7 +66,8 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     distortionSelector->addItem("arraya", 9);
     distortionSelector->addItem("gallo", 10);
     distortionSelector->addItem("doubleSoftClipper", 11);
-
+    distortionSelector->addItem("crush", 12);
+    
     addAndMakeVisible(distortionSelector.get());
     
     comboBoxAttach = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (audioProcessor.apvts, "DISTOR_SELECT", *distortionSelector);

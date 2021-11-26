@@ -35,4 +35,6 @@ struct Distortions
     float gallo(float input, float gain);
     
     float doubleSoftClipper(float input, float gain);
+    
+    float crush(float input, float gain);
 };

@@ -247,8 +247,17 @@ float Distortions::doubleSoftClipper(float input, float gain)
     return out;
 }
 
-
-
-
-
-
+float Distortions::crush(float input, float gain)
+{
+    auto out = 0.0f;
+    
+    gain /= 100.0f;
+    
+    float dry = input;
+    float wet = round(input * pow(2, gain));
+    out = (wet + dry)  * asin(gain) + dry;
+    
+//    out = out * 0.3;
+    
+    return out;
+}
