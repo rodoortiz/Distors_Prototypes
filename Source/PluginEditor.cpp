@@ -67,6 +67,8 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     distortionSelector->addItem("gallo", 10);
     distortionSelector->addItem("doubleSoftClipper", 11);
     distortionSelector->addItem("crush", 12);
+    distortionSelector->addItem("tuboid", 13);
+    distortionSelector->addItem("pakarinenYeh", 14);
     
     addAndMakeVisible(distortionSelector.get());
     

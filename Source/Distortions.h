@@ -37,4 +37,8 @@ struct Distortions
     float doubleSoftClipper(float input, float gain);
     
     float crush(float input, float gain);
+    
+    float tuboid(float input, float gain);
+    
+    float pakarinen_Yeh(float input, float gain);
 };

@@ -119,8 +119,8 @@ float Distortions::pieceWiseOverdrive(float input, float gain)
 
 float Distortions::tube(float input, float gain)
 {
-    float Q = -1.0f;
-    float distortion = 25;
+    float Q = -1.5f; //more negative = more linear
+    float distortion = 5; //higher number = higher distortion
     float out;
     
     float newInput = input * (gain / 10);
@@ -261,3 +261,62 @@ float Distortions::crush(float input, float gain)
     
     return out;
 }
+
+float Distortions::tuboid(float input, float gain)
+{
+    auto ktp = 1.0f;
+    auto ktn = 3.0f;
+    auto sfn = 0.0f;
+    
+    auto threshPos = 0.3f;
+    auto threshNeg = -0.7f;
+    
+    auto out = 0.0f;
+    
+    gain /= 10.0f;
+    
+    auto so = input * gain;
+    
+    if (so >= threshPos)
+    {
+        sfn = ktp * pow(so - threshPos, 3.0f);
+    } else if (so <= threshNeg)
+    {
+        sfn = -ktn * abs(pow(so - threshNeg, 3.0f));
+    } else
+    {
+        sfn = 0.0f;
+    }
+    
+    so = (input - sfn) * gain;
+    out = so;
+    
+    return out;
+}
+
+float Distortions::pakarinen_Yeh(float input, float gain)
+{
+    auto out = 0.0f;
+    
+    gain /= 100.0f;
+    
+    auto x = input * gain;
+    
+    if ((x >= 0.320018f) && (x <= 1.0f)) {
+        out = 0.630035f;
+    } else if ((x >= -0.08905f) && (x < 0.320018))
+    {
+        out = (-6.153f * pow(x, 2.0f)) + (3.9375 * x);
+    } else if ((x >= -1.0f) && (x < -0.08905f))
+    {
+        out = (-0.75f * (1.0f - pow(1.0f - (abs(x) - 0.029f), 12.0f) + (0.333f * (abs(x) - 0.029f)))) + 0.01f;
+    } else
+    {
+        out = -0.9818f;
+    }
+    
+    out *= 1.5;
+    
+    return out;
+}
+
