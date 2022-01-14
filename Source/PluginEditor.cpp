@@ -13,46 +13,34 @@
 Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (Distors_PrototypesAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    //KNOB 1 Gain
+    // KNOB 1 Gain
     gain = std::make_unique<Slider>();
-    gain->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    gain->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 30);
-    gain->setLookAndFeel(&knobLookAndFeel);
-    addAndMakeVisible(gain.get());
+    setSlider(gain.get());
     
     gainAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "KNOB1", *gain);
     
-    gainLabel.setText("Gain", dontSendNotification);
     gainLabel.attachToComponent(gain.get(), false);
-    gainLabel.setJustificationType(Justification::centred);
-    addAndMakeVisible(gainLabel);
+    setLabel(&gainLabel, "Gain");
     
-    //KNOB 2 DryWet
+    // KNOB 2 DryWet
     dryWet = std::make_unique<Slider>();
-    dryWet->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    dryWet->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 30);
-    addAndMakeVisible(dryWet.get());
+    setSlider(dryWet.get());
     
     dryWetAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "KNOB2", *dryWet);
     
-    dryWetLabel.setText("DryWet", dontSendNotification);
     dryWetLabel.attachToComponent(dryWet.get(), false);
-    dryWetLabel.setJustificationType(Justification::centred);
+    setLabel(&dryWetLabel, "DryWet");
     
-    //KNOB 3 Tone
+    // KNOB 3 Tone
     tone = std::make_unique<Slider>();
-    tone->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    tone->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 30);
-    tone->setLookAndFeel(&knobLookAndFeel);
-    addAndMakeVisible(tone.get());
+    setSlider(tone.get());
     
     toneAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "KNOB3", *tone);
     
-    toneLabel.setText("Tone", dontSendNotification);
     toneLabel.attachToComponent(tone.get(), false);
-    toneLabel.setJustificationType(Justification::centred);
+    setLabel(&toneLabel, "Tone");
     
-    //COMBOBOX DISTORS
+    // COMBOBOX DISTORS
     distortionSelector = std::make_unique<ComboBox>();
     distortionSelector->setTextWhenNothingSelected("Select Distortion");
     distortionSelector->addItem("arcTanDistortion", 1);
@@ -74,15 +62,14 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     
     comboBoxAttach = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment> (audioProcessor.apvts, "DISTOR_SELECT", *distortionSelector);
     
-    //BUTTON CONVOLUTION
+    // BUTTON CONVOLUTION
     convolutionButton = std::make_unique<TextButton>("Convolution");
     convolutionButton->setClickingTogglesState(true);
     addAndMakeVisible(convolutionButton.get());
     
     convButtonAttach = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment> (audioProcessor.apvts, "CONVOLUTION", *convolutionButton);
     
-    //COMBOBOX CONVOLUTION
-    
+    // COMBOBOX CONVOLUTION
     convolutionSelector = std::make_unique<ComboBox>();
     convolutionSelector->setTextWhenNothingSelected("Select Distortion");
     convolutionSelector->addItem("MetalOne", 1);
@@ -119,4 +106,19 @@ void Distors_PrototypesAudioProcessorEditor::resized()
     dryWet->setBoundsRelative(0.5f, 0.3f, 0.4f, 0.4f);
     tone->setBoundsRelative(0.3f, 0.6, 0.4f, 0.4f);
 
+}
+
+void Distors_PrototypesAudioProcessorEditor::setSlider(Slider* slider)
+{
+    slider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
+    slider->setTextBoxStyle(Slider::TextBoxBelow, false, 50, 30);
+    slider->setLookAndFeel(&knobLookAndFeel);
+    addAndMakeVisible(slider);
+}
+
+void Distors_PrototypesAudioProcessorEditor::setLabel(Label* label, String labelText)
+{
+    label->setText(labelText, dontSendNotification);
+    label->setJustificationType(Justification::centred);
+    addAndMakeVisible(label);
 }

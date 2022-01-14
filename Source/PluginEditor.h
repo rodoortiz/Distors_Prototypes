@@ -24,11 +24,22 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    
+    void setSlider(Slider* slider);
+    void setLabel(Label* label, String labelText);
 
 private:
-    std::unique_ptr<Slider> gain, dryWet, tone;
-    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainAttachment, dryWetAttachment, toneAttachment;
-    Label gainLabel, dryWetLabel, toneLabel;
+    std::unique_ptr<Slider> gain;
+    std::unique_ptr<Slider> dryWet;
+    std::unique_ptr<Slider> tone;
+    
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> gainAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> dryWetAttachment;
+    std::unique_ptr<AudioProcessorValueTreeState::SliderAttachment> toneAttachment;
+    
+    Label gainLabel;
+    Label dryWetLabel;
+    Label toneLabel;
     
     std::unique_ptr<ComboBox> distortionSelector;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> comboBoxAttach;
