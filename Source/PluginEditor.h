@@ -25,10 +25,12 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     
-    void setSlider(Slider* slider);
-    void setLabel(Label* label, String labelText);
+    void setSlider (Slider* slider);
+    void setLabel (Label* label, String labelText);
 
 private:
+    Distors_PrototypesAudioProcessor& audioProcessor;
+
     std::unique_ptr<Slider> gain;
     std::unique_ptr<Slider> dryWet;
     std::unique_ptr<Slider> tone;
@@ -49,8 +51,6 @@ private:
     
     std::unique_ptr<ComboBox> convolutionSelector;
     std::unique_ptr<AudioProcessorValueTreeState::ComboBoxAttachment> convComboBoxAttach;
-    
-    Distors_PrototypesAudioProcessor& audioProcessor;
     
     KnobLookAndFeel knobLookAndFeel;
 

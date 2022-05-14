@@ -35,7 +35,7 @@ public:
         const float rx = centerX - radius - 1.0f;
         const float ry = centerY - radius;
 
-        g.drawImage(knobImage,
+        g.drawImage (knobImage,
             (int)rx,
             (int)ry,
             2 * (int)radius,

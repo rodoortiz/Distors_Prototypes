@@ -10,18 +10,18 @@
 
 #include "Distortions.h"
 
-float Distortions::arcTanDistortion(float input, float gain)
+float Distortions::arcTanDistortion (float input, float gain)
 {
     gain = gain + 1.0f;
     
     float out = (2.0f / juce::MathConstants<float>::pi) * atan(gain * input);
     
-    out = out/log(gain);
+    out = out / log(gain);
     
     return out;
 }
 
-float Distortions::softClipper(float input, float gain)
+float Distortions::softClipper (float input, float gain)
 {
     float newInput = input * (gain / 10);
     float out = 0.0;
@@ -38,18 +38,18 @@ float Distortions::softClipper(float input, float gain)
     return out;
 }
 
-float Distortions::sigmoid(float input, float gain)
+float Distortions::sigmoid (float input, float gain)
 {
     gain = gain + 1.0f;
     
     float out = (2.0f * (1.0f / (1.0f + exp(-gain * input)))) - 1;
     
-    out = out/log(gain);
+    out = out / log(gain);
     
     return out;
 }
 
-float Distortions::hyperbolicTangent(float input, float gain)
+float Distortions::hyperbolicTangent (float input, float gain)
 {
     gain = gain + 1.0f;
     float out = (tanh(gain * input)) / (tanh(gain));
@@ -59,12 +59,12 @@ float Distortions::hyperbolicTangent(float input, float gain)
     return out;
 }
 
-float Distortions::diodeClipping(float input, float gain)
+float Distortions::diodeClipping (float input, float gain)
 {
 //    gain = gain + 1.0f;
     
     float diodeClippingAlgorithm = exp((0.1 * input) / (0.0253 * 1.68)) - 1;
-    float out = 2/juce::MathConstants<float>::pi * atan(diodeClippingAlgorithm * (gain * 16));
+    float out = 2 / juce::MathConstants<float>::pi * atan(diodeClippingAlgorithm * (gain * 16));
     
     out = out * 0.3;
 //    out = out/log(gain);
@@ -72,17 +72,16 @@ float Distortions::diodeClipping(float input, float gain)
     return out;
 }
 
-float Distortions::fuzzExponential(float input, float gain)
+float Distortions::fuzzExponential (float input, float gain)
 {
     float newInput = input * gain;
     float out;
     
     //Soft clipping
-    if (newInput < 0.0f) {
+    if (newInput < 0.0f)
         out = -1.0f *  (1.0f - exp(-abs(newInput)));
-    } else {
+    else
         out = 1.0f * (1.0f - exp(-abs(newInput)));
-    }
  
     //Half Wave Rectifier
     out = 0.5f * (out + abs(out));
@@ -93,31 +92,33 @@ float Distortions::fuzzExponential(float input, float gain)
 
 }
 
-float Distortions::pieceWiseOverdrive(float input, float gain)
+float Distortions::pieceWiseOverdrive (float input, float gain)
 {
     float newInput = input * (gain) ;
     float out;
     
     if (abs(newInput) <= 1/3)
         out = 2 * newInput;
-    else if (abs(newInput) > 2/3) {
+    else if (abs(newInput) > 2/3)
+    {
         if (newInput > 0)
             out = newInput;
         if (newInput < 0)
             out = -newInput;
-    } else {
+    } else
+    {
         if (newInput > 0)
             out = (3 - pow((2 - newInput * 3), 2)) / 3;
         if (newInput < 0)
             out = -(3 - pow((2 - newInput * 3), 2)) / 3;
     }
     
-    out = (out/log(gain + 1)) * 0.5f;
+    out = (out / log(gain + 1)) * 0.5f;
     
     return out;
 }
 
-float Distortions::tube(float input, float gain)
+float Distortions::tube (float input, float gain)
 {
     float Q = -1.5f; //more negative = more linear
     float distortion = 5; //higher number = higher distortion
@@ -125,14 +126,18 @@ float Distortions::tube(float input, float gain)
     
     float newInput = input * (gain / 10);
     
-    if (Q == 0) {
+    if (Q == 0)
+    {
         out = newInput / (1 - exp(-distortion * newInput));
-        if (newInput == Q) {
+        if (newInput == Q)
+        {
             out = 1 / distortion;
         }
-    } else {
+    } else
+    {
         out = ((newInput - Q) / (1 - exp(-distortion * (newInput - Q)))) + (Q / (1 - exp(distortion * Q)));
-        if (newInput == Q) {
+        if (newInput == Q)
+        {
             out = (1 / distortion) + (Q / (1 - exp(distortion * Q)));
         }
     }
@@ -142,7 +147,7 @@ float Distortions::tube(float input, float gain)
     return out;
 }
 
-float Distortions::arraya(float input, float gain)
+float Distortions::arraya (float input, float gain)
 {
     auto newInput = input * 1.0f;
     
@@ -150,11 +155,10 @@ float Distortions::arraya(float input, float gain)
     auto out = ((3.0f * newInput) / 2.0f) * (1.0f - (pow(newInput, 2.0f) / 3.0f));
     
 //    Fuzz Exponential
-    if (out < 0.0f) {
+    if (out < 0.0f)
         out = 1.0f * ((1.0f - exp(abs(out))/(exp(1.0f) - 1.0f)));
-    } else {
+    else
         out = -1.0f * ((1.0f - exp(abs(out))/(exp(1.0f) - 1.0f)));
-    }
     
     //Exponential 2
 //    out = (exp(1) - exp(1 - out)) / (exp(1) - 1);
@@ -162,9 +166,9 @@ float Distortions::arraya(float input, float gain)
 //    out = 0.5 * (out + abs(out));
 //    out = abs(out);
     
-    if (gain >= 10.0f) {
+    if (gain >= 10.0f)
         out = out * (gain / 100.0f);
-    } else
+    else
         out = out * (0.1f);
     
     //Arraya
@@ -174,7 +178,7 @@ float Distortions::arraya(float input, float gain)
     return out;
 }
 
-float Distortions::gallo(float input, float gain)
+float Distortions::gallo (float input, float gain)
 {
     float a = -0.01f;
     float b = 0.7f;
@@ -186,20 +190,17 @@ float Distortions::gallo(float input, float gain)
     
     auto newInput = input * gain;
     
-    if (newInput < a) {
+    if (newInput < a)
         out_1 = (k1 + newInput) / (k2 - newInput);
-    }
-    if (newInput >= a && newInput <= b) {
+    if (newInput >= a && newInput <= b)
         out_1 = newInput;
-    }
-    if (newInput > b) {
+    if (newInput > b)
         out_1 = (newInput - k3) / (newInput + k4);
-    }
     
     return out_1;
 }
 
-float Distortions::doubleSoftClipper(float input, float gain)
+float Distortions::doubleSoftClipper (float input, float gain)
 {
     auto slope = 2.0f;
     auto upperLim = 0.8f;
@@ -218,36 +219,27 @@ float Distortions::doubleSoftClipper(float input, float gain)
         input = (input - xOff) * upperSkew;
         
         if (input >= 1.0f / slope)
-        {
             out = upperLim;
-        } else if (input <= -1.0f / slope)
-        {
+        else if (input <= -1.0f / slope)
             out = 0.0f;
-        } else
-        {
+        else
             out = (3.0f / 2.0f) * upperLim * (slope * input - pow(slope * input, 3.0f) / 3.0f) / 2.0f + (upperLim / 2.0f);
-        }
-    }
-    else
+    } else
     {
         input = (input + xOff) * lowerSkew;
         
         if (input >= 1.0f / slope)
-        {
             out = 0.0f;
-        } else if (input <= -1.0f / slope)
-        {
+        else if (input <= -1.0f / slope)
             out = lowerLim;
-        } else
-        {
+        else
             out = (3.0f / 2.0f) * -lowerLim * (slope * input - pow(slope * input, 3.0f) / 3.0f) / 2.0f + (lowerLim / 2.0f);
-        }
     }
     
     return out;
 }
 
-float Distortions::crush(float input, float gain)
+float Distortions::crush (float input, float gain)
 {
     auto out = 0.0f;
     
@@ -262,7 +254,7 @@ float Distortions::crush(float input, float gain)
     return out;
 }
 
-float Distortions::tuboid(float input, float gain)
+float Distortions::tuboid (float input, float gain)
 {
     auto ktp = 1.0f;
     auto ktn = 3.0f;
@@ -278,15 +270,11 @@ float Distortions::tuboid(float input, float gain)
     auto so = input * gain;
     
     if (so >= threshPos)
-    {
         sfn = ktp * pow(so - threshPos, 3.0f);
-    } else if (so <= threshNeg)
-    {
+    else if (so <= threshNeg)
         sfn = -ktn * abs(pow(so - threshNeg, 3.0f));
-    } else
-    {
+    else
         sfn = 0.0f;
-    }
     
     so = (input - sfn) * gain;
     out = so;
@@ -294,7 +282,7 @@ float Distortions::tuboid(float input, float gain)
     return out;
 }
 
-float Distortions::pakarinen_Yeh(float input, float gain)
+float Distortions::pakarinen_Yeh (float input, float gain)
 {
     auto out = 0.0f;
     
@@ -302,18 +290,14 @@ float Distortions::pakarinen_Yeh(float input, float gain)
     
     auto x = input * gain;
     
-    if ((x >= 0.320018f) && (x <= 1.0f)) {
+    if ((x >= 0.320018f) && (x <= 1.0f))
         out = 0.630035f;
-    } else if ((x >= -0.08905f) && (x < 0.320018))
-    {
+    else if ((x >= -0.08905f) && (x < 0.320018))
         out = (-6.153f * pow(x, 2.0f)) + (3.9375 * x);
-    } else if ((x >= -1.0f) && (x < -0.08905f))
-    {
+    else if ((x >= -1.0f) && (x < -0.08905f))
         out = (-0.75f * (1.0f - pow(1.0f - (abs(x) - 0.029f), 12.0f) + (0.333f * (abs(x) - 0.029f)))) + 0.01f;
-    } else
-    {
+    else
         out = -0.9818f;
-    }
     
     out *= 1.5;
     

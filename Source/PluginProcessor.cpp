@@ -31,19 +31,40 @@ Distors_PrototypesAudioProcessor::~Distors_PrototypesAudioProcessor()
 AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::parameterLayout() {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
     
-    params.push_back(std::make_unique<AudioParameterFloat>("KNOB1", "Knob1", NormalisableRange<float> (1.0f, 100.0f, 0.01), 1.0f));
-    params.push_back(std::make_unique<AudioParameterFloat>("KNOB2", "Knob2", NormalisableRange<float> (0.0f, 1.0f, 0.01), 0.5f));
-    params.push_back(std::make_unique<AudioParameterFloat>("KNOB3", "Knob3", NormalisableRange<float> (20.0f, 20000.0f, 1.0), 20000.0f));
+    params.push_back (std::make_unique<AudioParameterFloat>("KNOB1",
+                                                            "Knob1",
+                                                            NormalisableRange<float> (1.0f, 100.0f, 0.01),
+                                                            1.0f));
+    
+    params.push_back (std::make_unique<AudioParameterFloat>("KNOB2",
+                                                            "Knob2",
+                                                            NormalisableRange<float> (0.0f, 1.0f, 0.01),
+                                                            0.5f));
+    
+    params.push_back (std::make_unique<AudioParameterFloat>("KNOB3",
+                                                            "Knob3",
+                                                            NormalisableRange<float> (20.0f, 20000.0f, 1.0),
+                                                            20000.0f));
     
     int numOfDistortions = 14;
-    params.push_back(std::make_unique<AudioParameterInt>("DISTOR_SELECT", "Distortion Selector", 1, numOfDistortions, 1));
-    int numOfConvolutions = 3;
-    params.push_back(std::make_unique<AudioParameterInt>("CONV_SELECT", "Convolution Selector", 1, numOfConvolutions, 1));
+    params.push_back (std::make_unique<AudioParameterInt>("DISTOR_SELECT",
+                                                          "Distortion Selector",
+                                                          1,
+                                                          numOfDistortions,
+                                                          1));
     
-    params.push_back(std::make_unique<AudioParameterBool>("CONVOLUTION", "Convolution", false));
+    int numOfConvolutions = 3;
+    params.push_back (std::make_unique<AudioParameterInt>("CONV_SELECT",
+                                                          "Convolution Selector",
+                                                          1,
+                                                          numOfConvolutions,
+                                                          1));
+    
+    params.push_back (std::make_unique<AudioParameterBool>("CONVOLUTION",
+                                                           "Convolution",
+                                                           false));
     
     return {params.begin(), params.end()};
-    
 }
 
 //==============================================================================
@@ -116,17 +137,32 @@ void Distors_PrototypesAudioProcessor::prepareToPlay (double sampleRate, int sam
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
     
-    convolution_1.prepare(spec);
-    convolution_1.loadImpulseResponse(BinaryData::metalOne_wav, BinaryData::metalOne_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    convolution_1.prepare (spec);
+    convolution_1.loadImpulseResponse (BinaryData::metalOne_wav,
+                                       BinaryData::metalOne_wavSize,
+                                       juce::dsp::Convolution::Stereo::yes,
+                                       juce::dsp::Convolution::Trim::yes,
+                                       0,
+                                       juce::dsp::Convolution::Normalise::yes);
     
-    convolution_2.prepare(spec);
-    convolution_2.loadImpulseResponse(BinaryData::Fredman_Straight_wav, BinaryData::Fredman_Straight_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    convolution_2.prepare (spec);
+    convolution_2.loadImpulseResponse (BinaryData::Fredman_Straight_wav,
+                                       BinaryData::Fredman_Straight_wavSize,
+                                       juce::dsp::Convolution::Stereo::yes,
+                                       juce::dsp::Convolution::Trim::yes,
+                                       0,
+                                       juce::dsp::Convolution::Normalise::yes);
     
-    convolution_3.prepare(spec);
-    convolution_3.loadImpulseResponse(BinaryData::GuitarHack_JJ_CENTRE45_0_wav, BinaryData::GuitarHack_JJ_CENTRE45_0_wavSize, juce::dsp::Convolution::Stereo::yes, juce::dsp::Convolution::Trim::yes, 0, juce::dsp::Convolution::Normalise::yes);
+    convolution_3.prepare (spec);
+    convolution_3.loadImpulseResponse (BinaryData::GuitarHack_JJ_CENTRE45_0_wav,
+                                       BinaryData::GuitarHack_JJ_CENTRE45_0_wavSize,
+                                       juce::dsp::Convolution::Stereo::yes,
+                                       juce::dsp::Convolution::Trim::yes,
+                                       0,
+                                       juce::dsp::Convolution::Normalise::yes);
     
-    toneFilter.prepare(spec);
-    toneFilter.setType(dsp::StateVariableTPTFilterType::lowpass);
+    toneFilter.prepare (spec);
+    toneFilter.setType (dsp::StateVariableTPTFilterType::lowpass);
 }
 
 void Distors_PrototypesAudioProcessor::releaseResources()
@@ -174,53 +210,55 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        for (int n = 0; n < buffer.getNumSamples(); ++n) {
+        for (int n = 0; n < buffer.getNumSamples(); ++n)
+        {
             float sample = buffer.getWritePointer(channel)[n];
             float sampleProcessed;
             auto gainValue = apvts.getRawParameterValue("KNOB1")->load();
             
-            switch (distortionSelected) {
+            switch (distortionSelected)
+            {
                 case 1:
-                    sampleProcessed = distortions.arcTanDistortion(sample, gainValue);
+                    sampleProcessed = distortions.arcTanDistortion (sample, gainValue);
                     break;
                 case 2:
-                    sampleProcessed = distortions.softClipper(sample, gainValue);
+                    sampleProcessed = distortions.softClipper (sample, gainValue);
                     break;
                 case 3:
-                    sampleProcessed = distortions.sigmoid(sample, gainValue);
+                    sampleProcessed = distortions.sigmoid (sample, gainValue);
                     break;
                 case 4:
-                    sampleProcessed = distortions.hyperbolicTangent(sample, gainValue);
+                    sampleProcessed = distortions.hyperbolicTangent (sample, gainValue);
                     break;
                 case 5:
-                    sampleProcessed = distortions.diodeClipping(sample, gainValue);
+                    sampleProcessed = distortions.diodeClipping (sample, gainValue);
                     break;
                 case 6:
-                    sampleProcessed = distortions.fuzzExponential(sample, gainValue);
+                    sampleProcessed = distortions.fuzzExponential (sample, gainValue);
                     break;
                 case 7:
-                    sampleProcessed = distortions.pieceWiseOverdrive(sample, gainValue);
+                    sampleProcessed = distortions.pieceWiseOverdrive (sample, gainValue);
                     break;
                 case 8:
-                    sampleProcessed = distortions.tube(sample, gainValue);
+                    sampleProcessed = distortions.tube (sample, gainValue);
                     break;
                 case 9:
-                    sampleProcessed = distortions.arraya(sample, gainValue);
+                    sampleProcessed = distortions.arraya (sample, gainValue);
                     break;
                 case 10:
-                    sampleProcessed = distortions.gallo(sample, gainValue);
+                    sampleProcessed = distortions.gallo (sample, gainValue);
                     break;
                 case 11:
-                    sampleProcessed = distortions.doubleSoftClipper(sample, gainValue);
+                    sampleProcessed = distortions.doubleSoftClipper (sample, gainValue);
                     break;
                 case 12:
-                    sampleProcessed = distortions.crush(sample, gainValue);
+                    sampleProcessed = distortions.crush (sample, gainValue);
                     break;
                 case 13:
-                    sampleProcessed = distortions.tuboid(sample, gainValue);
+                    sampleProcessed = distortions.tuboid (sample, gainValue);
                     break;
                 case 14:
-                    sampleProcessed = distortions.pakarinen_Yeh(sample, gainValue);
+                    sampleProcessed = distortions.pakarinen_Yeh (sample, gainValue);
                     break;
                     
                 default:
@@ -228,46 +266,43 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
                     break;
             }
 
-//            dryWetValue = apvts.getRawParameterValue("KNOB2")->load();
-//            float output = ((1.0f - dryWetValue) * sample) + (dryWetValue * sampleProcessed);
-
             buffer.getWritePointer(channel)[n] = sampleProcessed;
         }
     }
     
     auto convolutionState = static_cast<bool>(apvts.getRawParameterValue("CONVOLUTION")->load());
     
-    if (convolutionState) {
-        
+    if (convolutionState)
+    {
         auto audioBlock = dsp::AudioBlock<float> (buffer);
         auto context = dsp::ProcessContextReplacing<float> (audioBlock);
         
         auto convolutionSelected = static_cast<int>(apvts.getRawParameterValue("CONV_SELECT")->load());
         
-        switch (convolutionSelected) {
+        switch (convolutionSelected)
+        {
             case 1:
-                convolution_1.process(context);
+                convolution_1.process (context);
                 break;
             case 2:
-                convolution_2.process(context);
+                convolution_2.process (context);
                 break;
             case 3:
-                convolution_3.process(context);
+                convolution_3.process (context);
                 break;
                 
             default:
                 break;
         }
         
-        buffer.applyGain(0, buffer.getNumSamples(), 5.0f);
+        buffer.applyGain (0, buffer.getNumSamples(), 5.0f);
     }
     
-    toneFilter.setCutoffFrequency(apvts.getRawParameterValue("KNOB3")->load());
+    toneFilter.setCutoffFrequency (apvts.getRawParameterValue("KNOB3")->load());
     
     auto audioBlock = dsp::AudioBlock<float> (buffer);
     auto context = dsp::ProcessContextReplacing<float> (audioBlock);
-    toneFilter.process(context);
-
+    toneFilter.process (context);
 }
 
 //==============================================================================
