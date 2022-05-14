@@ -17,10 +17,10 @@ public:
     KnobLookAndFeel()
     {
         knobImage = ImageCache::getFromMemory(BinaryData::knob_png, BinaryData::knob_pngSize);
-    };
+    }
     
-    void drawRotarySlider (juce::Graphics& g, int x, int y, int width, int height, float sliderPos,
-                           const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider& slider) override
+    void drawRotarySlider (juce::Graphics& g, int x, int y, int width, int height, [[maybe_unused]] float sliderPos,
+                           [[maybe_unused]] const float rotaryStartAngle, [[maybe_unused]] const float rotaryEndAngle, juce::Slider& slider) override
     {
         const double rotation = (slider.getValue()
             - slider.getMinimum())
@@ -44,7 +44,7 @@ public:
             frameId * knobImage.getWidth(),
             knobImage.getWidth(),
             knobImage.getWidth());
-    };
+    }
     
 private:
     Image knobImage;

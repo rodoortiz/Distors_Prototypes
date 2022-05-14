@@ -33,17 +33,17 @@ AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::
     
     params.push_back (std::make_unique<AudioParameterFloat>("KNOB1",
                                                             "Knob1",
-                                                            NormalisableRange<float> (1.0f, 100.0f, 0.01),
+                                                            NormalisableRange<float> (1.0f, 100.0f, 0.01f),
                                                             1.0f));
     
     params.push_back (std::make_unique<AudioParameterFloat>("KNOB2",
                                                             "Knob2",
-                                                            NormalisableRange<float> (0.0f, 1.0f, 0.01),
+                                                            NormalisableRange<float> (0.0f, 1.0f, 0.01f),
                                                             0.5f));
     
     params.push_back (std::make_unique<AudioParameterFloat>("KNOB3",
                                                             "Knob3",
-                                                            NormalisableRange<float> (20.0f, 20000.0f, 1.0),
+                                                            NormalisableRange<float> (20.0f, 20000.0f, 1.0f),
                                                             20000.0f));
     
     int numOfDistortions = 14;
@@ -116,16 +116,16 @@ int Distors_PrototypesAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void Distors_PrototypesAudioProcessor::setCurrentProgram (int index)
+void Distors_PrototypesAudioProcessor::setCurrentProgram ([[maybe_unused]] int index)
 {
 }
 
-const juce::String Distors_PrototypesAudioProcessor::getProgramName (int index)
+const juce::String Distors_PrototypesAudioProcessor::getProgramName ([[maybe_unused]] int index)
 {
     return {};
 }
 
-void Distors_PrototypesAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void Distors_PrototypesAudioProcessor::changeProgramName ([[maybe_unused]] int index, [[maybe_unused]] const juce::String& newName)
 {
 }
 
@@ -133,9 +133,9 @@ void Distors_PrototypesAudioProcessor::changeProgramName (int index, const juce:
 void Distors_PrototypesAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     dsp::ProcessSpec spec;
-    spec.maximumBlockSize = samplesPerBlock;
+    spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
     spec.sampleRate = sampleRate;
-    spec.numChannels = getTotalNumOutputChannels();
+    spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
     
     convolution_1.prepare (spec);
     convolution_1.loadImpulseResponse (BinaryData::metalOne_wav,
@@ -197,7 +197,7 @@ bool Distors_PrototypesAudioProcessor::isBusesLayoutSupported (const BusesLayout
 }
 #endif
 
-void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, [[maybe_unused]] juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -206,7 +206,7 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    int distortionSelected = apvts.getRawParameterValue("DISTOR_SELECT")->load();
+    auto distortionSelected = static_cast<int>(apvts.getRawParameterValue("DISTOR_SELECT")->load());
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {

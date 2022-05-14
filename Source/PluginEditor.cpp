@@ -107,7 +107,7 @@ void Distors_PrototypesAudioProcessorEditor::resized()
     
     dryWet->setBoundsRelative (0.5f, 0.3f, 0.4f, 0.4f);
     
-    tone->setBoundsRelative (0.3f, 0.6, 0.4f, 0.4f);
+    tone->setBoundsRelative (0.3f, 0.6f, 0.4f, 0.4f);
 }
 
 void Distors_PrototypesAudioProcessorEditor::setSlider (Slider* slider)

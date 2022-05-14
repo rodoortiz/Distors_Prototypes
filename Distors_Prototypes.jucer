@@ -31,8 +31,8 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="Distors_Prototypes"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="Distors_Prototypes"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Distors_Prototypes" recommendedWarnings="LLVM"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Distors_Prototypes" recommendedWarnings="LLVM"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../../../Applications/JUCE/modules"/>
