@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="jNQ83R" name="Distors_Prototypes" projectType="audioplug"
-              jucerFormatVersion="1" companyName="Rod Plugins">
+              jucerFormatVersion="1" companyName="Rod Plugins" displaySplashScreen="1">
   <MAINGROUP id="byAr7k" name="Distors_Prototypes">
     <GROUP id="{15980ACB-2D48-935D-C3F7-25E851A27921}" name="Source">
       <FILE id="oxx4Di" name="PluginProcessor.cpp" compile="1" resource="0"

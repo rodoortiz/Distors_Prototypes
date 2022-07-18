@@ -87,6 +87,7 @@ Distors_PrototypesAudioProcessorEditor::~Distors_PrototypesAudioProcessorEditor(
 {
     gain->setLookAndFeel (nullptr);
     tone->setLookAndFeel (nullptr);
+    dryWet->setLookAndFeel (nullptr);
 }
 
 //==============================================================================
