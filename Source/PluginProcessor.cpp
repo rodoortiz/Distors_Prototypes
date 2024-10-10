@@ -163,6 +163,8 @@ void Distors_PrototypesAudioProcessor::prepareToPlay (double sampleRate, int sam
     
     toneFilter.prepare (spec);
     toneFilter.setType (dsp::StateVariableTPTFilterType::lowpass);
+    
+    dryWet.prepare (spec);
 }
 
 void Distors_PrototypesAudioProcessor::releaseResources()
@@ -206,7 +208,10 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    auto distortionSelected = static_cast<int>(apvts.getRawParameterValue("DISTOR_SELECT")->load());
+    auto audioBlock = juce::dsp::AudioBlock<float> (buffer);
+    dryWet.pushDrySamples (audioBlock);
+    
+    auto distortionSelected = static_cast<int> (apvts.getRawParameterValue ("DISTOR_SELECT")->load());
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
@@ -270,14 +275,14 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         }
     }
     
-    auto convolutionState = static_cast<bool>(apvts.getRawParameterValue("CONVOLUTION")->load());
+    auto convolutionState = static_cast<bool>(apvts.getRawParameterValue ("CONVOLUTION")->load());
     
     if (convolutionState)
     {
-        auto audioBlock = dsp::AudioBlock<float> (buffer);
-        auto context = dsp::ProcessContextReplacing<float> (audioBlock);
+        auto block = dsp::AudioBlock<float> (buffer);
+        auto context = dsp::ProcessContextReplacing<float> (block);
         
-        auto convolutionSelected = static_cast<int>(apvts.getRawParameterValue("CONV_SELECT")->load());
+        auto convolutionSelected = static_cast<int>(apvts.getRawParameterValue ("CONV_SELECT")->load());
         
         switch (convolutionSelected)
         {
@@ -298,11 +303,13 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         buffer.applyGain (0, buffer.getNumSamples(), 5.0f);
     }
     
-    toneFilter.setCutoffFrequency (apvts.getRawParameterValue("TONE")->load());
+    toneFilter.setCutoffFrequency (apvts.getRawParameterValue ("TONE")->load());
     
-    auto audioBlock = dsp::AudioBlock<float> (buffer);
     auto context = dsp::ProcessContextReplacing<float> (audioBlock);
     toneFilter.process (context);
+    
+    dryWet.setWetMixProportion (apvts.getRawParameterValue ("DRYWET")->load());
+    dryWet.mixWetSamples (audioBlock);
 }
 
 //==============================================================================

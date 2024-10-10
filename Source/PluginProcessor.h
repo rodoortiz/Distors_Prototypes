@@ -66,6 +66,7 @@ private:
     dsp::Convolution convolution_2;
     dsp::Convolution convolution_3;
     dsp::StateVariableTPTFilter<float> toneFilter;
+    dsp::DryWetMixer<float> dryWet;
     
     float dryWetValue;
     
