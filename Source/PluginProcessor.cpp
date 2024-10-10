@@ -31,18 +31,18 @@ Distors_PrototypesAudioProcessor::~Distors_PrototypesAudioProcessor()
 AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::parameterLayout() {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
     
-    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "KNOB1", 1 },
-                                                            "Knob1",
+    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "GAIN", 1 },
+                                                            "Gain",
                                                             NormalisableRange<float> (1.0f, 100.0f, 0.01f),
                                                             1.0f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "KNOB2", 1 },
-                                                            "Knob2",
+    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "DRYWET", 1 },
+                                                            "DryWet",
                                                             NormalisableRange<float> (0.0f, 1.0f, 0.01f),
                                                             0.5f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "KNOB3", 1 },
-                                                            "Knob3",
+    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "TONE", 1 },
+                                                            "Tone",
                                                             NormalisableRange<float> (20.0f, 20000.0f, 1.0f),
                                                             20000.0f));
     
@@ -214,7 +214,7 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         {
             float sample = buffer.getWritePointer(channel)[n];
             float sampleProcessed;
-            auto gainValue = apvts.getRawParameterValue("KNOB1")->load();
+            auto gainValue = apvts.getRawParameterValue("GAIN")->load();
             
             switch (distortionSelected)
             {
@@ -298,7 +298,7 @@ void Distors_PrototypesAudioProcessor::processBlock (juce::AudioBuffer<float>& b
         buffer.applyGain (0, buffer.getNumSamples(), 5.0f);
     }
     
-    toneFilter.setCutoffFrequency (apvts.getRawParameterValue("KNOB3")->load());
+    toneFilter.setCutoffFrequency (apvts.getRawParameterValue("TONE")->load());
     
     auto audioBlock = dsp::AudioBlock<float> (buffer);
     auto context = dsp::ProcessContextReplacing<float> (audioBlock);

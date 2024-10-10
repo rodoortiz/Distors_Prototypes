@@ -17,7 +17,7 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     gain = std::make_unique<Slider>();
     setSlider(gain.get());
     
-    gainAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.apvts, "KNOB1", *gain);
+    gainAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.apvts, "GAIN", *gain);
     
     gainLabel.attachToComponent (gain.get(), false);
     setLabel (&gainLabel, "Gain");
@@ -26,7 +26,7 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     dryWet = std::make_unique<Slider>();
     setSlider (dryWet.get());
     
-    dryWetAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.apvts, "KNOB2", *dryWet);
+    dryWetAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.apvts, "DRYWET", *dryWet);
     
     dryWetLabel.attachToComponent (dryWet.get(), false);
     setLabel (&dryWetLabel, "DryWet");
@@ -35,7 +35,7 @@ Distors_PrototypesAudioProcessorEditor::Distors_PrototypesAudioProcessorEditor (
     tone = std::make_unique<Slider>();
     setSlider (tone.get());
     
-    toneAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.apvts, "KNOB3", *tone);
+    toneAttachment = std::make_unique<AudioProcessorValueTreeState::SliderAttachment> (audioProcessor.apvts, "TONE", *tone);
     
     toneLabel.attachToComponent (tone.get(), false);
     setLabel (&toneLabel, "Tone");
