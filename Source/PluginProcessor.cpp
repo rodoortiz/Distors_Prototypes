@@ -31,36 +31,36 @@ Distors_PrototypesAudioProcessor::~Distors_PrototypesAudioProcessor()
 AudioProcessorValueTreeState::ParameterLayout Distors_PrototypesAudioProcessor::parameterLayout() {
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
     
-    params.push_back (std::make_unique<AudioParameterFloat>("KNOB1",
+    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "KNOB1", 1 },
                                                             "Knob1",
                                                             NormalisableRange<float> (1.0f, 100.0f, 0.01f),
                                                             1.0f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("KNOB2",
+    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "KNOB2", 1 },
                                                             "Knob2",
                                                             NormalisableRange<float> (0.0f, 1.0f, 0.01f),
                                                             0.5f));
     
-    params.push_back (std::make_unique<AudioParameterFloat>("KNOB3",
+    params.push_back (std::make_unique<AudioParameterFloat>(ParameterID { "KNOB3", 1 },
                                                             "Knob3",
                                                             NormalisableRange<float> (20.0f, 20000.0f, 1.0f),
                                                             20000.0f));
     
     int numOfDistortions = 14;
-    params.push_back (std::make_unique<AudioParameterInt>("DISTOR_SELECT",
+    params.push_back (std::make_unique<AudioParameterInt>(ParameterID { "DISTOR_SELECT", 1 },
                                                           "Distortion Selector",
                                                           1,
                                                           numOfDistortions,
                                                           1));
     
     int numOfConvolutions = 3;
-    params.push_back (std::make_unique<AudioParameterInt>("CONV_SELECT",
+    params.push_back (std::make_unique<AudioParameterInt>(ParameterID { "CONV_SELECT", 1 },
                                                           "Convolution Selector",
                                                           1,
                                                           numOfConvolutions,
                                                           1));
     
-    params.push_back (std::make_unique<AudioParameterBool>("CONVOLUTION",
+    params.push_back (std::make_unique<AudioParameterBool>(ParameterID { "CONVOLUTION", 1 },
                                                            "Convolution",
                                                            false));
     
@@ -144,7 +144,7 @@ void Distors_PrototypesAudioProcessor::prepareToPlay (double sampleRate, int sam
                                        juce::dsp::Convolution::Trim::yes,
                                        0,
                                        juce::dsp::Convolution::Normalise::yes);
-    
+
     convolution_2.prepare (spec);
     convolution_2.loadImpulseResponse (BinaryData::Fredman_Straight_wav,
                                        BinaryData::Fredman_Straight_wavSize,
